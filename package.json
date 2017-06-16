@@ -1,0 +1,18 @@
+{
+  "name": "monkingxue.github.io",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "repository": "https://github.com/monkingxue/monkingxue.github.io.git",
+  "author": "monkingxue <1360662499@qq.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "node-fetch": "^1.7.1",
+    "superagent": "^3.5.2"
+  },
+  "devDependencies": {}
+}
