@@ -7,23 +7,15 @@ function createIssue({title, body, labels, milestone, assignees, owner, reposito
     path: `/repos/${owner}/${repository}/issues`, data: {
       title, body, labels, milestone, assignees, owner, repository
     }
-  }).then(body => {
-    return body.data;
-  });
+  })
 }
 
 function fetchIssue({owner, repository, number}) {
-  return this.httpGet({path: `/repos/${owner}/${repository}/issues/${number}`})
-    .then(body => {
-      return body.data;
-    });
+  return this.httpGet({path: `/repos/${owner}/${repository}/issues/${number}`});
 }
 
 function fetchIssues({owner, repository}) {
-  return this.httpGet({path: `/repos/${owner}/${repository}/issues`})
-    .then(body => {
-      return body.data;
-    });
+  return this.httpGet({path: `/repos/${owner}/${repository}/issues`});
 }
 
 function addIssueComment({owner, repository, number, body}) {
@@ -31,16 +23,11 @@ function addIssueComment({owner, repository, number, body}) {
     path: `/repos/${owner}/${repository}/issues/${number}/comments`, data: {
       body
     }
-  }).then(body => {
-    return body.data;
   });
 }
 
 function fetchIssueComments({owner, repository, number}) {
-  return this.httpGet({path: `/repos/${owner}/${repository}/issues/${number}/comments`})
-    .then(body => {
-      return body.data;
-    });
+  return this.httpGet({path: `/repos/${owner}/${repository}/issues/${number}/comments`});
 }
 
 function addIssueReaction({owner, repository, number, content}) {
@@ -52,7 +39,7 @@ function addIssueReaction({owner, repository, number, content}) {
     }
   }).then(body => {
     this.headers["Accept"] = saveAccept;
-    return body.data;
+    return body;
   });
 }
 
@@ -65,7 +52,7 @@ function addIssueCommentReaction({owner, repository, id, content}) {
     }
   }).then(body => {
     this.headers["Accept"] = saveAccept;
-    return body.data;
+    return body;
   });
 }
 

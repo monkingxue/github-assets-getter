@@ -19,43 +19,60 @@ class BaseXhr {
     this.credentials = (token !== null && token.length > 0) ? `token ${token}` : null;
     this.headers = {
       "Content-Type": "application/json",
-      "Accept": "application/vnd.github.v3.full+json",
+      "Accept": "application/json",
       "Authorization": this.credentials
     };
 
     return Object.assign(this, ...features);
   }
 
-  baseXhr = (errHandler) => ({path, data = null, method = 'GET'}) => {
-    const url = this.baseUrl + path;
-    const headers = this.headers;
-    return new Promise((resolve, reject) => {
-      request(method, url)
-        .set(headers)
-        .send(data)
-        .on('error', err => reject(new HttpException(err, url)))
-        .end(res => {
-          if (res.statusType < 4)
-            resolve(res.body);
-          else
-            reject(new HttpException({
-              message: `HttpException[${method}]`,
-              status: res.status,
-              statusType: res.statusType
-            }, url))
-        })
-    }).catch(errHandler)
-  };
+  baseXhr(errHandler) {
+    return ({path, method = 'GET', data = null}) => {
+      const url = this.baseUrl + path;
+      const headers = this.headers;
+      return new Promise((resolve, reject) => {
+        request(method, url)
+          .set(headers)
+          .send(data)
+          .end((err, res) => {
+            if (err instanceof Error)
+              return reject(new HttpException(err, url));
+            if (res.statusType < 4)
+              return resolve(res.body);
+            else
+              return reject(new HttpException({
+                message: `HttpException[${method}]`,
+                status: res.status,
+                statusType: res.statusType
+              }, url))
+          })
+      }).catch(errHandler)
+    };
+  }
 
-  enhancedXhr = this.baseXhr(exception => {
-    throw exception;
-  });
+  enhancedXhr(data) {
+    return this.baseXhr(exception => {
+      console.error(exception);
+    })(data);
+  }
 
-  httpGet = (path) => this.enhancedXhr({path});
+  httpGet({path}) {
+    return this.enhancedXhr({path});
+  }
 
-  httpPost = (path, data) => this.enhancedXhr({path, method: "POST", data});
+  httpPost({path, data}) {
+    return this.enhancedXhr({path, method: "POST", data});
+  }
 
-  httpPut = (path, data) => this.enhancedXhr({path, method: "PUT", data});
+  httpPut({path, data}) {
+    return this.enhancedXhr({path, method: "PUT", data});
+  }
 
-  httpDel = (path) => this.enhancedXhr({path, method: "DELETE"});
+  httpDel({path}) {
+    return this.enhancedXhr({path, method: "DELETE"});
+  }
 }
+
+module.exports = {
+  BaseXhr
+};
